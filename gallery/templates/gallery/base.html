@@ -12,9 +12,17 @@
   <a class="brand" href="{% url 'gallery' %}">Slide<b>Gallery</b></a>
   <nav>
     <a href="{% url 'gallery' %}">Gallery</a>
-    <a href="{% url 'upload' %}">Upload</a>
+    {% if user.is_authenticated %}<a href="{% url 'upload' %}">Upload</a>{% endif %}
   </nav>
   {% block actions %}{% endblock %}
+  <div class="auth">
+    {% if user.is_authenticated %}
+      <span class="muted">{{ user.get_username }}</span>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn">Log out</button></form>
+    {% else %}
+      <a class="btn" href="{% url 'login' %}">Log in</a>
+    {% endif %}
+  </div>
 </header>
 {% block content %}{% endblock %}
 </body>

@@ -1,6 +1,6 @@
 (() => {
   const $ = id => document.getElementById(id);
-  const csrf = document.querySelector('meta[name=csrf-token]').content;
+  const csrf = document.querySelector("meta[name=csrf-token]").content;
   const CHUNK = 80;
   let items = [], rendered = 0, selecting = false;
   const selected = new Set();
@@ -11,7 +11,7 @@
     items = d.items;
     $('count').textContent = items.length + ' items';
     $('empty').hidden = items.length > 0;
-    $('playall').hidden = !items.length; $('selbtn').hidden = !items.length;
+    $('playall').hidden = !items.length; if ($('selbtn')) $('selbtn').hidden = !items.length;
     renderMore();
     new IntersectionObserver(es => { if (es[0].isIntersecting) renderMore(); }, { rootMargin: '1200px' }).observe($('sentinel'));
   });
@@ -47,14 +47,14 @@
     } else openShow(+t.dataset.i);
   });
 
-  $('selbtn').onclick = () => {
+  if ($('selbtn')) $('selbtn').onclick = () => {
     selecting = !selecting; selected.clear();
     grid.classList.toggle('selecting', selecting);
     grid.querySelectorAll('.sel').forEach(n => n.classList.remove('sel'));
     $('selbtn').textContent = selecting ? 'Cancel' : 'Select';
     $('delbtn').hidden = !selecting; $('delbtn').textContent = 'Delete (0)';
   };
-  $('delbtn').onclick = async () => {
+  if ($('delbtn')) $('delbtn').onclick = async () => {
     if (!selected.size || !confirm(`Delete ${selected.size} item(s)? This cannot be undone.`)) return;
     await fetch('/api/delete/', { method: 'POST', headers: { 'X-CSRFToken': csrf }, body: JSON.stringify({ ids: [...selected] }) });
     location.reload();

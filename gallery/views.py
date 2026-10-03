@@ -1,3 +1,6 @@
+from functools import wraps
+
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET, require_POST
@@ -6,10 +9,20 @@ from .models import MediaItem
 from .processing import kind_for, process_image, process_video
 
 
+def api_login_required(view):
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Please log in to do this'}, status=401)
+        return view(request, *args, **kwargs)
+    return wrapper
+
+
 def gallery(request):
     return render(request, 'gallery/gallery.html')
 
 
+@login_required
 def upload_page(request):
     return render(request, 'gallery/upload.html')
 
@@ -31,6 +44,7 @@ def api_items(request):
 
 
 @require_POST
+@api_login_required
 def api_upload(request):
     """One file per request; the browser uploads several in parallel."""
     f = request.FILES.get('file')
@@ -51,6 +65,7 @@ def api_upload(request):
 
 
 @require_POST
+@api_login_required
 def api_delete(request):
     import json
     ids = json.loads(request.body or '{}').get('ids', [])

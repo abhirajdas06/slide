@@ -82,6 +82,7 @@ set -a; source .env; set +a
 python manage.py migrate
 python manage.py collectstatic --noinput
 python manage.py check
+python manage.py createsuperuser     # your login for uploading
 ```
 (`check --deploy` will print an email-backend error and HSTS notes — the app sends no email, ignore the error.)
 
@@ -135,7 +136,7 @@ sudo nano /etc/nginx/sites-available/slide
 ```nginx
 server {
     listen 80;
-    server_name slide.example.com;
+    server_name slide.genesisimperialarts.com;
 
     client_max_body_size 2G;          # largest single video you expect
 
@@ -174,21 +175,27 @@ sudo certbot --nginx -d slide.example.com
 ```
 Certbot edits the Nginx file to add HTTPS and the redirect. Visit `https://slide.example.com`.
 
-## 9. Protect it (important)
+## 9. Who can do what (login)
 
-**The app has no login: anyone who finds the URL can upload and delete.** Quick fix with Nginx basic auth:
+The app has built-in login:
 
+| Action | Who |
+|---|---|
+| View gallery, play slideshow | Anyone with the URL |
+| Upload, delete | Logged-in users only (`/login/`) |
+
+Add more users (e.g. family/team) at `https://slide.example.com/admin/` using the superuser you created in step 5 → **Users → Add user**. Give them a password; no extra permissions are needed to upload/delete.
+
+Want the **whole gallery private** (viewing too)? Add Nginx basic auth inside `location /`:
 ```bash
 sudo apt install -y apache2-utils
 sudo htpasswd -c /etc/nginx/.slide_htpasswd yourname
 ```
-Inside the `location /` block add:
 ```nginx
 auth_basic "Gallery";
 auth_basic_user_file /etc/nginx/.slide_htpasswd;
 ```
-Then `sudo nginx -t && sudo systemctl reload nginx`. (Don't put it on `/media/` unless you want the browser to prompt for those requests too — it already has the credentials once logged in, so it's safe either way.)
-If you want real per-user accounts later, that's a code change (Django login) — ask.
+Note that `/media/` files are served by Nginx directly and are only hidden from people who don't know the file URLs; add the same two lines to the `/media/` block if they must be strictly private.
 
 ## 10. Updating later
 

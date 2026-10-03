@@ -3,8 +3,10 @@
 {% block actions %}
 <div class="actions">
   <span id="count" class="muted"></span>
+  {% if user.is_authenticated %}
   <button id="selbtn" class="btn">Select</button>
   <button id="delbtn" class="btn danger" hidden>Delete (0)</button>
+  {% endif %}
   <button id="playall" class="btn primary">&#9654; Slideshow</button>
 </div>
 {% endblock %}
@@ -12,7 +14,8 @@
 <main class="wrap wide">
   <div id="empty" class="empty" hidden>
     <p class="big">No media yet</p>
-    <a class="btn primary" href="{% url 'upload' %}">Upload images &amp; videos</a>
+    {% if user.is_authenticated %}<a class="btn primary" href="{% url 'upload' %}">Upload images &amp; videos</a>
+    {% else %}<a class="btn primary" href="{% url 'login' %}">Log in to upload</a>{% endif %}
   </div>
   <div id="grid" class="grid"></div>
   <div id="sentinel"></div>

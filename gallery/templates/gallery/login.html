@@ -1,0 +1,15 @@
+{% extends 'gallery/base.html' %}
+{% block title %}Log in · Gallery{% endblock %}
+{% block content %}
+<main class="login">
+  <h1>Log in to upload</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <p>{{ form.username.label_tag }}{{ form.username }}</p>
+    <p>{{ form.password.label_tag }}{{ form.password }}</p>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn primary">Log in</button>
+  </form>
+</main>
+{% endblock %}

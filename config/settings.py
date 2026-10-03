@@ -145,3 +145,7 @@ MEDIA_ROOT = Path(os.environ.get('DJANGO_MEDIA_ROOT', BASE_DIR / 'media'))
 # Videos can be large; they are streamed to disk, not held in memory.
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_NUMBER_FILES = None
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'gallery'
+LOGOUT_REDIRECT_URL = 'gallery'
