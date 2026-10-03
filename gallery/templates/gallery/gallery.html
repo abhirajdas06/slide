@@ -1,0 +1,49 @@
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block actions %}
+<div class="actions">
+  <span id="count" class="muted"></span>
+  <button id="selbtn" class="btn">Select</button>
+  <button id="delbtn" class="btn danger" hidden>Delete (0)</button>
+  <button id="playall" class="btn primary">&#9654; Slideshow</button>
+</div>
+{% endblock %}
+{% block content %}
+<main class="wrap wide">
+  <div id="empty" class="empty" hidden>
+    <p class="big">No media yet</p>
+    <a class="btn primary" href="{% url 'upload' %}">Upload images &amp; videos</a>
+  </div>
+  <div id="grid" class="grid"></div>
+  <div id="sentinel"></div>
+</main>
+
+<div id="show" class="show" hidden>
+  <div class="stage" id="stage">
+    <div class="layer" id="layerA"></div>
+    <div class="layer" id="layerB"></div>
+  </div>
+  <button class="nav prev" id="prev" aria-label="Previous">&#10094;</button>
+  <button class="nav next" id="next" aria-label="Next">&#10095;</button>
+  <div class="progress"><i id="prog"></i></div>
+  <div class="controls" id="controls">
+    <button id="play" class="btn" title="Play / pause (Space)">&#10074;&#10074;</button>
+    <span id="pos" class="muted"></span>
+    <span class="grow"></span>
+    <label class="muted">Every
+      <select id="secs">
+        <option value="2">2s</option><option value="3">3s</option>
+        <option value="5">5s</option><option value="8">8s</option>
+        <option value="10">10s</option><option value="15">15s</option>
+        <option value="30">30s</option><option value="60">60s</option>
+        <option value="custom">Custom…</option>
+      </select>
+    </label>
+    <label class="muted check"><input type="checkbox" id="shuffle"> Shuffle</label>
+    <label class="muted check"><input type="checkbox" id="loop" checked> Loop</label>
+    <button id="fs" class="btn" title="Fullscreen (F)">&#9974;</button>
+    <button id="close" class="btn" title="Close (Esc)">&#10005;</button>
+  </div>
+</div>
+<script src="{% static 'gallery/gallery.js' %}"></script>
+{% endblock %}

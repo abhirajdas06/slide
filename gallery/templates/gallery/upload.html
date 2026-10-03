@@ -1,0 +1,25 @@
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block title %}Upload · Gallery{% endblock %}
+{% block content %}
+<main class="wrap">
+  <div id="drop" class="drop" tabindex="0">
+    <p class="big">Drop images &amp; videos here</p>
+    <p>JPG, JPEG, PNG, MP4, WEBM, MOV &middot; hundreds at once is fine</p>
+    <label class="btn primary">Choose files
+      <input id="pick" type="file" multiple hidden
+             accept=".jpg,.jpeg,.png,.mp4,.webm,.mov,.m4v,.ogv,image/jpeg,image/png,video/*">
+    </label>
+    <label class="btn">Choose folder
+      <input id="pickdir" type="file" webkitdirectory hidden>
+    </label>
+  </div>
+  <div id="overall" class="overall" hidden>
+    <div class="bar"><i id="obar"></i></div>
+    <span id="otext"></span>
+  </div>
+  <ul id="list" class="ulist"></ul>
+  <p id="done" class="done" hidden>All done — <a href="{% url 'gallery' %}">view gallery &rarr;</a></p>
+</main>
+<script src="{% static 'gallery/upload.js' %}"></script>
+{% endblock %}
